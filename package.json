@@ -1,0 +1,44 @@
+{
+  "name": "feline-fury",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "clean-css": "^5.3.3",
+    "copy-webpack-plugin": "^13.0.0",
+    "cross-env": "^10.0.0",
+    "ect-bin": "1.4.1",
+    "eslint": "^9.33.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "globals": "^16.3.0",
+    "google-closure-compiler": "^20250805.0.0",
+    "html-minifier": "^4.0.0",
+    "html-webpack-plugin": "^5.6.0",
+    "npm-run-all": "^4.1.5",
+    "roadroller": "^2.1.0",
+    "tmp": "^0.2.5",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.39.0",
+    "vite": "^6.3.5",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.1.0"
+  },
+  "scripts": {
+    "serve": "npm-run-all --parallel tsc vite",
+    "build": "cross-env LEVEL_2_BUILD=true vite build",
+    "find-best-roadroller": "node find-best-roadroller.js",
+    "build-with-best-roadroller": "cross-env USE_RR_CONFIG=true vite build",
+    
+    "vite": "vite serve",
+    "tsc": "tsc --watch --noEmit"
+  },
+  "author": "Chang He (Vincent)"
+}
