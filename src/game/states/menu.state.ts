@@ -7,15 +7,15 @@ import { gameState } from './game.state';
 class MenuState implements State {
   private isStartSelected = true;
 
-  onUpdate() {
+  onUpdate(timeElapsed: number) {
     this.updateControls();
   }
 
   onDraw() {
     const xCenter = drawEngine.context.canvas.width / 2;
-    drawEngine.drawText('Menu', 80, xCenter, 90);
-    drawEngine.drawText('Start Game', 60, xCenter, 600, this.isStartSelected ? 'white' : 'gray');
-    drawEngine.drawText('Toggle Fullscreen', 60, xCenter, 700, this.isStartSelected ? 'gray' : 'white');
+    drawEngine.drawText('Menu', 40, xCenter, 80);
+    drawEngine.drawText('Start Game', 24, xCenter, 200, this.isStartSelected ? 'white' : 'gray');
+    drawEngine.drawText('Toggle Fullscreen', 24, xCenter, 240, this.isStartSelected ? 'gray' : 'white');
   }
 
   updateControls() {

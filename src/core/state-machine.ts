@@ -14,6 +14,10 @@ export class StateMachine {
     this.currentState.onEnter?.(...enterArgs);
   }
 
+  update(timeElapsed: number) {
+    this.currentState.onUpdate(timeElapsed);
+  }
+
   getState() {
     return this.currentState;
   }

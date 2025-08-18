@@ -1,8 +1,9 @@
-class DrawEngine {
+export class DrawEngine {
   context: CanvasRenderingContext2D;
 
   constructor() {
     this.context = c2d.getContext('2d');
+    this.context.imageSmoothingEnabled = true;
   }
 
   get canvasWidth() {
