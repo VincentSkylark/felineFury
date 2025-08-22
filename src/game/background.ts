@@ -21,8 +21,8 @@ export class Background {
       return;
     }
 
-    pctx.fillStyle = '#d9a066';
-    pctx.strokeStyle = '#8f563b';
+    pctx.fillStyle = '#8f563b';
+    pctx.strokeStyle = '#45283c';
     pctx.lineWidth = 1;
 
     // Row 0

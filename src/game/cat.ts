@@ -1,14 +1,17 @@
 import { Animation, Frame } from './animation';
 import { controls } from '../core/controls';
 import { assetLoader } from '../core/asset-loader';
+import { GameObject } from './gameObject';
 
 const CHARACTER_SPEED = 2;
-const CHARACTER_WIDTH = 16;
+const CHARACTER_WIDTH = 12;
 const CHARACTER_HEIGHT = 24;
 
-export class MainCharacter {
+export class BlackCat implements GameObject {
   private animations: Map<string, Animation> = new Map();
   private currentAnimation!: Animation;
+  public width = CHARACTER_WIDTH;
+  public height = CHARACTER_HEIGHT;
   private isLoaded = false;
 
   constructor(
@@ -20,7 +23,7 @@ export class MainCharacter {
   }
 
   private load() {
-    const originalImage = assetLoader.getImage('/cat-16-24.png');
+    const originalImage = assetLoader.getImage('/cat-12-24.png');
 
     const flippedCanvas = document.createElement('canvas');
     flippedCanvas.width = CHARACTER_WIDTH;

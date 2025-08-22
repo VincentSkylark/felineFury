@@ -4,7 +4,6 @@ import { createGameStateMachine, gameStateMachine } from './game-state-machine';
 import { controls } from '@/core/controls';
 import { assetLoader } from './core/asset-loader';
 import { drawEngine } from './core/draw-engine';
-import { createGameState } from './game/states/game.state';
 
 async function main() {
   const { context, canvasWidth, canvasHeight } = drawEngine;
@@ -12,11 +11,12 @@ async function main() {
   context.fillRect(0, 0, canvasWidth, canvasHeight);
 
   await assetLoader.loadImages([
-    '/cat-16-24.png',
+    '/cat-12-24.png',
     '/robot-16.png',
+    '/flippers-16.png',
+    '/cucumber-16.png',
   ]);
 
-  createGameState();
   createGameStateMachine(menuState);
 
   let previousTime = 0;
