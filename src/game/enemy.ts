@@ -34,6 +34,6 @@ export abstract class Enemy implements GameObject {
     }
 
     public draw(): void {
-        this.context.drawImage(this.currentAnimation.currentFrameImage, this.x, this.y);
+        this.context.drawImage(this.currentAnimation.currentFrameImage, this.x, this.y, this.width, this.height);
     }
 }

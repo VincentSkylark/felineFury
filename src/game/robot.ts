@@ -3,8 +3,10 @@ import { assetLoader } from '../core/asset-loader';
 import { BlackCat } from './cat';
 import { Enemy } from './enemy';
 
-const ROBOT_WIDTH = 16;
-const ROBOT_HEIGHT = 16;
+const ROBOT_SPRITE_WIDTH = 16;
+const ROBOT_SPRITE_HEIGHT = 16;
+const ROBOT_WIDTH = 24;
+const ROBOT_HEIGHT = 24;
 
 export type PathFunction = (time: number) => { x: number, y: number };
 
@@ -28,12 +30,12 @@ export class Robot extends Enemy {
         const originalImage = assetLoader.getImage('/robot-16.png');
 
         const flippedCanvas = document.createElement('canvas');
-        flippedCanvas.width = ROBOT_WIDTH;
-        flippedCanvas.height = ROBOT_HEIGHT;
+        flippedCanvas.width = ROBOT_SPRITE_WIDTH;
+        flippedCanvas.height = ROBOT_SPRITE_HEIGHT;
         const ctx = flippedCanvas.getContext('2d');
 
         if (ctx) {
-            ctx.translate(ROBOT_WIDTH, 0);
+            ctx.translate(ROBOT_SPRITE_WIDTH, 0);
             ctx.scale(-1, 1);
             ctx.drawImage(originalImage, 0, 0);
             ctx.fillStyle = '#B13E53';

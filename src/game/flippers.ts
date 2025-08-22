@@ -3,8 +3,10 @@ import { assetLoader } from '../core/asset-loader';
 import { BlackCat } from './cat';
 import { Enemy } from './enemy';
 
-const FLIPPERS_WIDTH = 16;
-const FLIPPERS_HEIGHT = 16;
+const FLIPPERS_SPRITE_WIDTH = 16;
+const FLIPPERS_SPRITE_HEIGHT = 16;
+const FLIPPERS_WIDTH = 24;
+const FLIPPERS_HEIGHT = 24;
 
 export type PathFunction = (time: number) => { x: number, y: number };
 
@@ -28,12 +30,12 @@ export class Flippers extends Enemy {
         const originalImage = assetLoader.getImage('/flippers-16.png');
 
         const flippedCanvas = document.createElement('canvas');
-        flippedCanvas.width = FLIPPERS_WIDTH;
-        flippedCanvas.height = FLIPPERS_HEIGHT;
+        flippedCanvas.width = FLIPPERS_SPRITE_WIDTH;
+        flippedCanvas.height = FLIPPERS_SPRITE_HEIGHT;
         const ctx = flippedCanvas.getContext('2d');
 
         if (ctx) {
-            ctx.translate(FLIPPERS_WIDTH, 0);
+            ctx.translate(FLIPPERS_SPRITE_WIDTH, 0);
             ctx.scale(-1, 1);
             ctx.drawImage(originalImage, 0, 0);
         }
