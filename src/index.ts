@@ -12,8 +12,8 @@ async function main() {
   context.fillRect(0, 0, canvasWidth, canvasHeight);
 
   await assetLoader.loadImages([
-    '/sample-16-24.png',
-    '/sample-16-24-2.png',
+    '/cat-16-24.png',
+    '/robot-16.png',
   ]);
 
   createGameState();

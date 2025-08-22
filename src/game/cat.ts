@@ -20,9 +20,22 @@ export class MainCharacter {
   }
 
   private load() {
+    const originalImage = assetLoader.getImage('/cat-16-24.png');
+
+    const flippedCanvas = document.createElement('canvas');
+    flippedCanvas.width = CHARACTER_WIDTH;
+    flippedCanvas.height = CHARACTER_HEIGHT;
+    const ctx = flippedCanvas.getContext('2d');
+
+    if (ctx) {
+      ctx.translate(CHARACTER_WIDTH, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(originalImage, 0, 0);
+    }
+
     const normalFrames: Frame[] = [
-      [assetLoader.getImage('/sample-16-24.png'), 100],
-      [assetLoader.getImage('/sample-16-24-2.png'), 200],
+      [originalImage, 200],
+      [flippedCanvas, 200],
     ];
     const normalAnimation = new Animation('normal', normalFrames);
     this.animations.set('normal', normalAnimation);

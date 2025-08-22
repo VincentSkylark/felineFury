@@ -1,4 +1,4 @@
-export type Frame = [HTMLImageElement, number]; // [image, duration in milliseconds]
+export type Frame = [CanvasImageSource, number]; // [image, duration in milliseconds]
 
 export class Animation {
   private frameIndex = 0;
@@ -23,7 +23,7 @@ export class Animation {
     }
   }
 
-  public get currentFrameImage(): HTMLImageElement {
+  public get currentFrameImage(): CanvasImageSource {
     return this.frames[this.frameIndex][0];
   }
 

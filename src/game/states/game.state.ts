@@ -5,7 +5,7 @@ import { gameStateMachine } from '@/game-state-machine';
 // import { menuState } from '@/game/states/menu.state';
 import { Background } from '@/game/background';
 import { menuState } from './menu.state';
-import { MainCharacter } from '../mainCharacter';
+import { MainCharacter } from '../cat';
 
 class GameState implements State {
   private background: Background;
