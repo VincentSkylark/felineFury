@@ -1,4 +1,4 @@
-import { Animation, Frame } from './animation';
+import { GameAnimation, Frame } from './animation';
 import { assetLoader } from '../core/asset-loader';
 import { BlackCat } from './cat';
 import { Enemy } from './enemy';
@@ -11,8 +11,8 @@ const ROBOT_HEIGHT = 24;
 export type PathFunction = (time: number) => { x: number, y: number };
 
 export class Robot extends Enemy {
-    private animations: Map<string, Animation> = new Map();
-    protected currentAnimation!: Animation;
+    private animations: Map<string, GameAnimation> = new Map();
+    protected currentAnimation!: GameAnimation;
     private time = 0;
     public width = ROBOT_WIDTH;
     public height = ROBOT_HEIGHT;
@@ -46,7 +46,7 @@ export class Robot extends Enemy {
             [originalImage, 200],
             [flippedCanvas, 200],
         ];
-        const animation = new Animation('default', frames);
+        const animation = new GameAnimation('default', frames);
         this.animations.set('default', animation);
         this.currentAnimation = animation;
     }

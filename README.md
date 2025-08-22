@@ -13,6 +13,7 @@ Use the arrow keys to move and the space bar to shoot.
 ## Build and Run
 
 To build the game, run the following command:
+For best compression with google closure compiler, please make sure you have jdk 21 installed
 
 ```
 npm run build

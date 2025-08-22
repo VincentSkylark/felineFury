@@ -13,11 +13,10 @@ import ect from 'ect-bin';
 // Import CommonJS modules properly
 import htmlMinifierPkg from 'html-minifier';
 import tmpPkg from 'tmp';
-import closureCompilerPkg from 'google-closure-compiler';
+import ClosureCompiler from 'google-closure-compiler';
 
 const { minify: htmlMinify } = htmlMinifierPkg;
 const tmp = tmpPkg;
-const { compiler: ClosureCompiler } = closureCompilerPkg;
 
 // Get __dirname equivalent in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -69,13 +68,14 @@ function closurePlugin(): Plugin {
   };
 }
 
-async function applyClosure(js: string, chunk: any) {
+async function applyClosure(js: string, chunk: any): Promise<{ code: string }> {
   try {
     const tmpobj = tmp.fileSync();
     // replace all consts with lets to save about 50-70 bytes
     js = js.replaceAll('const ', 'let ');
 
     await fs.writeFile(tmpobj.name, js);
+
     const closureCompiler = new ClosureCompiler({
       js: tmpobj.name,
       externs: 'externs.js',
@@ -83,17 +83,19 @@ async function applyClosure(js: string, chunk: any) {
       language_in: 'ECMASCRIPT_2020',
       language_out: 'ECMASCRIPT_2020',
     });
-    return new Promise((resolve, _reject) => {
-      closureCompiler.run((_exitCode: string, stdOut: string, stdErr: string) => {
-        if (stdOut !== '') {
-          resolve({ code: stdOut });
-        } else if (stdErr !== '') { // only reject if stdout isn't generated
-          console.warn('Closure Compiler failed, falling back to original code:', stdErr);
-          resolve({ code: js }); // Fallback to original code
-          return;
-        }
 
-        console.warn(stdErr); // If we make it here, there were warnings but no errors
+    return new Promise((resolve, _reject) => {
+      closureCompiler.run((_exitCode: number, stdOut: string, stdErr: string) => {
+        if (stdErr) {
+          console.warn('Closure Compiler warnings/errors:', stdErr);
+        }
+        
+        if (stdOut) {
+          resolve({ code: stdOut });
+        } else {
+          console.warn('Closure Compiler failed to produce output, falling back to original code.');
+          resolve({ code: js }); // Fallback to original code
+        }
       });
     });
   } catch (error) {
@@ -133,7 +135,7 @@ function roadrollerPlugin(): Plugin {
         const bundleOutputs = Object.values(ctx.bundle);
         const javascript = bundleOutputs.find((output) => output.fileName.endsWith('.js')) as OutputChunk;
         const css = bundleOutputs.find((output) => output.fileName.endsWith('.css')) as OutputAsset;
-        const otherBundleOutputs = bundleOutputs.filter((output) => output !== javascript);
+        const otherBundleOutputs = bundleOutputs.filter((output) => output !== javascript && output !== css);
         if (otherBundleOutputs.length > 0) {
           otherBundleOutputs.forEach((output) => console.warn(`WARN Asset not inlined: ${output.fileName}`));
         }
@@ -218,5 +220,6 @@ function ectPlugin(): Plugin {
         console.log('ECT error', err);
       }
     },
+    enforce: 'post',
   };
 }

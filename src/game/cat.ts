@@ -1,4 +1,4 @@
-import { Animation, Frame } from './animation';
+import { GameAnimation, Frame } from './animation';
 import { controls } from '../core/controls';
 import { assetLoader } from '../core/asset-loader';
 import { GameObject } from './gameObject';
@@ -8,8 +8,8 @@ const CHARACTER_WIDTH = 12;
 const CHARACTER_HEIGHT = 24;
 
 export class BlackCat implements GameObject {
-  private animations: Map<string, Animation> = new Map();
-  private currentAnimation!: Animation;
+  private animations: Map<string, GameAnimation> = new Map();
+  private currentAnimation!: GameAnimation;
   public width = CHARACTER_WIDTH;
   public height = CHARACTER_HEIGHT;
   private isLoaded = false;
@@ -40,7 +40,7 @@ export class BlackCat implements GameObject {
       [originalImage, 200],
       [flippedCanvas, 200],
     ];
-    const normalAnimation = new Animation('normal', normalFrames);
+    const normalAnimation = new GameAnimation('normal', normalFrames);
     this.animations.set('normal', normalAnimation);
     this.currentAnimation = normalAnimation;
   }

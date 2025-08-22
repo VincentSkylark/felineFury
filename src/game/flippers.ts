@@ -1,4 +1,4 @@
-import { Animation, Frame } from './animation';
+import { GameAnimation, Frame } from './animation';
 import { assetLoader } from '../core/asset-loader';
 import { BlackCat } from './cat';
 import { Enemy } from './enemy';
@@ -11,8 +11,8 @@ const FLIPPERS_HEIGHT = 24;
 export type PathFunction = (time: number) => { x: number, y: number };
 
 export class Flippers extends Enemy {
-    private animations: Map<string, Animation> = new Map();
-    protected currentAnimation!: Animation;
+    private animations: Map<string, GameAnimation> = new Map();
+    protected currentAnimation!: GameAnimation;
     private time = 0;
     public width = FLIPPERS_WIDTH;
     public height = FLIPPERS_HEIGHT;
@@ -44,7 +44,7 @@ export class Flippers extends Enemy {
             [originalImage, 300],
             [flippedCanvas, 100],
         ];
-        const animation = new Animation('default', frames);
+        const animation = new GameAnimation('default', frames);
         this.animations.set('default', animation);
         this.currentAnimation = animation;
     }

@@ -1,6 +1,6 @@
 export type Frame = [CanvasImageSource, number]; // [image, duration in milliseconds]
 
-export class Animation {
+export class GameAnimation {
   private frameIndex = 0;
   private timer = 0;
 

@@ -1,5 +1,5 @@
 import { GameObject } from './gameObject';
-import { Animation } from './animation';
+import { GameAnimation } from './animation';
 import { BlackCat } from './cat';
 import { gameStateMachine } from '@/game-state-machine';
 import { menuState } from './states/menu.state';
@@ -9,7 +9,7 @@ export abstract class Enemy implements GameObject {
     public y = 0;
     public abstract width: number;
     public abstract height: number;
-    protected abstract currentAnimation: Animation;
+    protected abstract currentAnimation: GameAnimation;
 
     constructor(
         protected context: CanvasRenderingContext2D,
