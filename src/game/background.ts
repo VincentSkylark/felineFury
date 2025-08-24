@@ -1,25 +1,17 @@
 import { DrawEngine } from '../core/draw-engine';
-import { loadImage } from '../utils/load-image';
-import cabinetUrl from '/cabinet-16.png';
-import bookshelfUrl from '/bookshelf-16.png';
+import { assetLoader } from '../core/asset-loader';
 
 export class Background {
   private y = 0;
   private speed = 0.03; // 1 pixel per frame
   private patternHeight = 0;
   private pattern: CanvasPattern | null = null;
-  private cabinetImage: HTMLImageElement | undefined;
-  private bookshelfImage: HTMLImageElement | undefined;
+  private cabinetImage: HTMLImageElement;
+  private bookshelfImage: HTMLImageElement;
 
   constructor(private drawEngine: DrawEngine) {
-    this.loadAssets();
-  }
-
-  private async loadAssets() {
-    [this.cabinetImage, this.bookshelfImage] = await Promise.all([
-      loadImage(cabinetUrl),
-      loadImage(bookshelfUrl),
-    ]);
+    this.cabinetImage = assetLoader.getImage('/cabinet-16.png');
+    this.bookshelfImage = assetLoader.getImage('/bookshelf-16.png');
     this.createPattern();
   }
 
