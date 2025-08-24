@@ -10,8 +10,12 @@ const CHARACTER_HEIGHT = 24;
 export class BlackCat implements GameObject {
   private animations: Map<string, GameAnimation> = new Map();
   private currentAnimation!: GameAnimation;
+  private attackAnimation!: GameAnimation;
   public width = CHARACTER_WIDTH;
   public height = CHARACTER_HEIGHT;
+  public isAttacking = false;
+  private attackCooldown = 2000; // ms
+  private attackTimer = this.attackCooldown;
   private isLoaded = false;
 
   constructor(
@@ -43,9 +47,43 @@ export class BlackCat implements GameObject {
     const normalAnimation = new GameAnimation('normal', normalFrames);
     this.animations.set('normal', normalAnimation);
     this.currentAnimation = normalAnimation;
+
+    const attackImage = assetLoader.getImage('/attack-16.png');
+
+    const flippedAttackCanvas = document.createElement('canvas');
+    flippedAttackCanvas.width = 16;
+    flippedAttackCanvas.height = 16;
+    const attackCtx = flippedAttackCanvas.getContext('2d');
+
+    if (attackCtx) {
+      attackCtx.translate(16, 0);
+      attackCtx.scale(-1, 1);
+      attackCtx.drawImage(attackImage, 0, 0);
+    }
+
+    const attackFrames: Frame[] = [
+      [attackImage, 100],
+      [flippedAttackCanvas, 100],
+    ];
+    this.attackAnimation = new GameAnimation('attack', attackFrames, false);
   }
 
   public update(deltaTime: number) {
+    this.attackTimer += deltaTime;
+
+    if (controls.isAttacking && !this.isAttacking && this.attackTimer >= this.attackCooldown) {
+      this.isAttacking = true;
+      this.attackAnimation.reset();
+      this.attackTimer = 0;
+    }
+
+    if (this.isAttacking) {
+      this.attackAnimation.update(deltaTime);
+      if (this.attackAnimation.isFinished) {
+        this.isAttacking = false;
+      }
+    }
+
     this.handleMovement();
     this.currentAnimation.update(deltaTime);
   }
@@ -81,5 +119,10 @@ export class BlackCat implements GameObject {
 
   public draw() {
     this.context.drawImage(this.currentAnimation.currentFrameImage, this.x, this.y);
+    if (this.isAttacking) {
+      const attackX = this.x + (this.width / 2) - (16 / 2);
+      const attackY = this.y - 24;
+      this.context.drawImage(this.attackAnimation.currentFrameImage, attackX, attackY);
+    }
   }
 }

@@ -41,8 +41,8 @@ export class Flippers extends Enemy {
         }
 
         const frames: Frame[] = [
-            [originalImage, 300],
-            [flippedCanvas, 100],
+            [originalImage, 500],
+            [flippedCanvas, 300],
         ];
         const animation = new GameAnimation('default', frames);
         this.animations.set('default', animation);

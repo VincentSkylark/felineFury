@@ -74,7 +74,7 @@ class GameState implements State {
     }
     this.gameTime += timeElapsed;
 
-    if (this.boss && controls.isDamageBoss) {
+    if (this.boss && controls.isAttacking) {
         this.boss.takeDamage();
     }
 

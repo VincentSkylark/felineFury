@@ -30,10 +30,10 @@ export class Background {
 
     const cabinetPatternCanvas = document.createElement('canvas');
     cabinetPatternCanvas.width = 32;
-    cabinetPatternCanvas.height = 32;
+    cabinetPatternCanvas.height = 48;
     const cabinetCtx = cabinetPatternCanvas.getContext('2d');
     if (cabinetCtx) {
-      cabinetCtx.drawImage(this.cabinetImage, 0, 0, 32, 32);
+      cabinetCtx.drawImage(this.cabinetImage, 0, 0, 32, 48);
     }
 
     const bookshelfPatternCanvas = document.createElement('canvas');

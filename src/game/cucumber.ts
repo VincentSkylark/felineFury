@@ -2,6 +2,8 @@ import { GameAnimation, Frame } from './animation';
 import { assetLoader } from '../core/asset-loader';
 import { BlackCat } from './cat';
 import { Enemy } from './enemy';
+import { gameStateMachine } from '@/game-state-machine';
+import { overState } from './states/over.state';
 
 const CUCUMBER_WIDTH = 16;
 const CUCUMBER_HEIGHT = 16;
@@ -15,6 +17,8 @@ export class Cucumber extends Enemy {
     private angle = 0;
     public width = CUCUMBER_WIDTH;
     public height = CUCUMBER_HEIGHT;
+    public isReflected = false;
+    private speed = 0;
 
     constructor(
         context: CanvasRenderingContext2D,
@@ -37,12 +41,49 @@ export class Cucumber extends Enemy {
     }
 
     public update(deltaTime: number) {
-        this.time += deltaTime;
-        const newPosition = this.path(this.time);
-        this.x = newPosition.x;
-        this.y = newPosition.y;
+        if (this.isReflected) {
+            this.y -= this.speed * 1.5* deltaTime;
+        } else {
+            this.time += deltaTime;
+            const newPosition = this.path(this.time);
+            this.x = newPosition.x;
+            this.y = newPosition.y;
+        }
         this.angle += 0.005 * deltaTime;
         super.update(deltaTime);
+    }
+
+    protected checkCollision(): void {
+        const cat = this.mainCharacter;
+
+        if (cat.isAttacking && !this.isReflected) {
+            const attackWidth = 16;
+            const attackHeight = 16;
+            const attackX = cat.x + (cat.width / 2) - (attackWidth / 2);
+            const attackY = cat.y - 24;
+
+            if (
+                this.x < attackX + attackWidth &&
+                this.x + this.width > attackX &&
+                this.y < attackY + attackHeight &&
+                this.y + this.height > attackY
+            ) {
+                this.isReflected = true;
+                if (this.time > 0) {
+                    this.speed = this.y / this.time;
+                }
+                return;
+            }
+        }
+
+        if (
+            this.x < cat.x + cat.width &&
+            this.x + this.width > cat.x &&
+            this.y < cat.y + cat.height &&
+            this.y + this.height > cat.y
+        ) {
+            gameStateMachine.setState(overState);
+        }
     }
 
     public draw() {

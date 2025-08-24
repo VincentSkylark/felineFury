@@ -1,5 +1,6 @@
 import { drawEngine } from '@/core/draw-engine';
 import { Enemy } from './enemy';
+import { Cucumber } from './cucumber';
 
 export type EnemyGenerator = () => Enemy;
 
@@ -49,9 +50,33 @@ export class EnemyGenerationFactory {
         // 2. Update existing enemies
         this.enemies.forEach(enemy => enemy.update(deltaTime));
 
-        // 3. Garbage collect off-screen enemies
+        const reflectedCucumbers = this.enemies.filter(
+            e => e instanceof Cucumber && (e as Cucumber).isReflected && !e.isDead
+        );
+        const otherEnemies = this.enemies.filter(
+            e => !reflectedCucumbers.includes(e) && !e.isDead
+        );
+        
+        if (reflectedCucumbers.length > 0) {
+            for (const cucumber of reflectedCucumbers) {
+                for (const enemy of otherEnemies) {
+                    if (
+                        cucumber.x < enemy.x + enemy.width &&
+                        cucumber.x + cucumber.width > enemy.x &&
+                        cucumber.y < enemy.y + enemy.height &&
+                        cucumber.y + cucumber.height > enemy.y
+                    ) {
+                        cucumber.isDead = true;
+                        enemy.isDead = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // 3. Garbage collect off-screen or dead enemies
         this.enemies = this.enemies.filter(enemy => 
-             enemy.y < drawEngine.canvasHeight
+             enemy.y < drawEngine.canvasHeight && enemy.y > -enemy.height && !enemy.isDead
         );
     }
 

@@ -12,6 +12,7 @@ async function main() {
 
   await assetLoader.loadImages([
     '/cat-12-24.png',
+    '/attack-16.png',
     '/robot-16.png',
     '/flippers-16.png',
     '/cucumber-16.png',
