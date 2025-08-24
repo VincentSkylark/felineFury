@@ -5,17 +5,27 @@ import { Background } from '../background';
 import { Robot } from '../robot';
 import { Flippers } from '../flippers';
 import { Cucumber } from '../cucumber';
+import { Boss } from '../boss';
 import { EnemyGenerationFactory } from '../enemy-generation.factory';
+import { controls } from '@/core/controls';
 
 class GameState implements State {
   private character!: BlackCat;
   private background!: Background;
   private enemyFactory!: EnemyGenerationFactory;
+  private boss: Boss | null = null;
+  private gameTime = 0;
+  private bossFightStarted = false;
+  private bossFightPending = false;
 
   onEnter() {
     this.character = new BlackCat(drawEngine.context, 120, 300);
     this.background = new Background(drawEngine);
     this.enemyFactory = new EnemyGenerationFactory();
+    this.gameTime = 0;
+    this.boss = null;
+    this.bossFightStarted = false;
+    this.bossFightPending = false;
     this.enemyFactory.registerEnemyType(() => {
         const x = Math.random() * drawEngine.canvasWidth;
         const speed = 0.05 + Math.random() * 0.1;
@@ -51,17 +61,44 @@ class GameState implements State {
       return new Flippers(drawEngine.context, path, this.character);
     }, 2000);
   }
+  
+  private startBossFight() {
+    this.enemyFactory.stop();
+    this.bossFightPending = true;
+  }
 
   onUpdate(timeElapsed: number) {
+    if (!this.bossFightStarted && this.gameTime > 10000) {
+        this.bossFightStarted = true;
+        this.startBossFight();
+    }
+    this.gameTime += timeElapsed;
+
+    if (this.boss && controls.isDamageBoss) {
+        this.boss.takeDamage();
+    }
+
     this.background.update(timeElapsed);
     this.character.update(timeElapsed);
     this.enemyFactory.update(timeElapsed);
+
+    if (this.bossFightPending && this.enemyFactory.enemies.length === 0) {
+        this.boss = new Boss(drawEngine.context, this.character);
+        this.bossFightPending = false;
+    }
+
+    if(this.boss) {
+        this.boss.update(timeElapsed);
+    }
   }
 
   onDraw() {
     this.background.draw();
     this.character.draw();
     this.enemyFactory.draw();
+    if(this.boss) {
+        this.boss.draw();
+    }
   }
 
   onExit() {

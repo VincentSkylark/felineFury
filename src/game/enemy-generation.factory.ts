@@ -12,6 +12,7 @@ interface EnemyType {
 export class EnemyGenerationFactory {
     public enemies: Enemy[] = [];
     private enemyTypes: EnemyType[] = [];
+    private isSpawning = true;
 
     public registerEnemyType(generator: EnemyGenerator, spawnInterval: number) {
         this.enemyTypes.push({
@@ -21,15 +22,29 @@ export class EnemyGenerationFactory {
         });
     }
 
+    public start() {
+        this.isSpawning = true;
+    }
+
+    public stop() {
+        this.isSpawning = false;
+    }
+
+    public clear() {
+        this.enemies = [];
+    }
+
     public update(deltaTime: number) {
         // 1. Spawn new enemies
-        const now = performance.now();
-        this.enemyTypes.forEach(type => {
-            if (now - type.lastSpawn > type.spawnInterval) {
-                type.lastSpawn = now;
-                this.enemies.push(type.generator());
-            }
-        });
+        if(this.isSpawning) {
+            const now = performance.now();
+            this.enemyTypes.forEach(type => {
+                if (now - type.lastSpawn > type.spawnInterval) {
+                    type.lastSpawn = now;
+                    this.enemies.push(type.generator());
+                }
+            });
+        }
 
         // 2. Update existing enemies
         this.enemies.forEach(enemy => enemy.update(deltaTime));

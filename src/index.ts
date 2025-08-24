@@ -15,6 +15,12 @@ async function main() {
     '/robot-16.png',
     '/flippers-16.png',
     '/cucumber-16.png',
+    '/cabinet-16.png',
+    '/bookshelf-16.png',
+    '/boss-base.png',
+    '/boss-anger.png',
+    '/boss-hurt.png',
+    '/boss-defeat.png',
   ]);
 
   createGameStateMachine(menuState);

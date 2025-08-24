@@ -24,10 +24,11 @@ class Controls {
   isRight = false;
   isConfirm = false;
   isEscape = false;
+  isDamageBoss = false;
   inputDirection: DOMPoint;
 
   keyMap: Map<string, boolean> = new Map();
-  previousState = { isUp: this.isUp, isDown: this.isDown, isConfirm: this.isConfirm, isEscape: this.isEscape };
+  previousState = { isUp: this.isUp, isDown: this.isDown, isConfirm: this.isConfirm, isEscape: this.isEscape, isDamageBoss: this.isDamageBoss };
 
   constructor() {
     document.addEventListener('keydown', event => this.toggleKey(event, true));
@@ -40,6 +41,7 @@ class Controls {
     this.previousState.isDown = this.isDown;
     this.previousState.isConfirm = this.isConfirm;
     this.previousState.isEscape = this.isEscape;
+    this.previousState.isDamageBoss = this.isDamageBoss;
     const gamepad = navigator.getGamepads()[0];
     const isButtonPressed = (button: XboxControllerButton) => gamepad?.buttons[button].pressed;
 
@@ -62,6 +64,9 @@ class Controls {
     this.isRight = this.inputDirection.x > 0;
     this.isConfirm = Boolean(this.keyMap.get('Enter') || isButtonPressed(XboxControllerButton.A) || isButtonPressed(XboxControllerButton.Start));
     this.isEscape = Boolean(this.keyMap.get('Escape') || isButtonPressed(XboxControllerButton.Select));
+
+    const isDamageBossPressed = Boolean(this.keyMap.get('KeyZ'));
+    this.isDamageBoss = isDamageBossPressed && !this.previousState.isDamageBoss;
   }
 
   private toggleKey(event: KeyboardEvent, isPressed: boolean) {
