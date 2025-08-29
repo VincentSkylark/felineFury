@@ -3,6 +3,8 @@ import { GameAnimation } from './animation';
 import { BlackCat } from './cat';
 import { gameStateMachine } from '@/game-state-machine';
 import { overState } from './states/over.state';
+import { audioEngine } from '@/core/audio-engine';
+import { enemyDeathSound } from './sounds';
 
 export abstract class Enemy implements GameObject {
     public x = 0;
@@ -38,6 +40,7 @@ export abstract class Enemy implements GameObject {
                 this.y + this.height > attackY
             ) {
                 this.isDead = true;
+                audioEngine.play(enemyDeathSound);
                 return;
             }
         }

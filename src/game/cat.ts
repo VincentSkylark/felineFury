@@ -2,6 +2,8 @@ import { GameAnimation, Frame } from './animation';
 import { controls } from '../core/controls';
 import { assetLoader } from '../core/asset-loader';
 import { GameObject } from './gameObject';
+import { audioEngine } from '@/core/audio-engine';
+import { attackSound } from './sounds';
 
 const CHARACTER_SPEED = 2;
 const CHARACTER_WIDTH = 12;
@@ -75,6 +77,7 @@ export class BlackCat implements GameObject {
       this.isAttacking = true;
       this.attackAnimation.reset();
       this.attackTimer = 0;
+      audioEngine.play(attackSound);
     }
 
     if (this.isAttacking) {

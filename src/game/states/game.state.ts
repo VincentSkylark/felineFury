@@ -8,6 +8,8 @@ import { Cucumber } from '../cucumber';
 import { Boss } from '../boss';
 import { EnemyGenerationFactory } from '../enemy-generation.factory';
 import { controls } from '@/core/controls';
+import { audioEngine } from '@/core/audio-engine';
+import { gameStartSound } from '../sounds';
 
 class GameState implements State {
   private character!: BlackCat;
@@ -19,6 +21,8 @@ class GameState implements State {
   private bossFightPending = false;
 
   onEnter() {
+    audioEngine.stopAll();
+    audioEngine.play(gameStartSound, true);
     this.character = new BlackCat(drawEngine.context, 120, 300);
     this.background = new Background(drawEngine);
     this.enemyFactory = new EnemyGenerationFactory();
@@ -102,7 +106,7 @@ class GameState implements State {
   }
 
   onExit() {
-    // Clean up resources if needed
+    audioEngine.stopAll();
   }
 }
 

@@ -4,11 +4,24 @@ import { createGameStateMachine, gameStateMachine } from './game-state-machine';
 import { controls } from '@/core/controls';
 import { assetLoader } from './core/asset-loader';
 import { drawEngine } from './core/draw-engine';
+import { audioEngine } from './core/audio-engine';
 
 async function main() {
   const { context, canvasWidth, canvasHeight } = drawEngine;
   context.fillStyle = 'black';
   context.fillRect(0, 0, canvasWidth, canvasHeight);
+
+  let audioInitialized = false;
+  const initAudio = () => {
+    if (audioInitialized) {
+      return;
+    }
+    audioEngine.init();
+    audioInitialized = true;
+  };
+
+  document.body.addEventListener('keydown', initAudio);
+  document.body.addEventListener('touchstart', initAudio);
 
   await assetLoader.loadImages([
     '/cat-12-24.png',
