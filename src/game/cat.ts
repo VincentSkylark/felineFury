@@ -77,7 +77,7 @@ export class BlackCat implements GameObject {
       this.isAttacking = true;
       this.attackAnimation.reset();
       this.attackTimer = 0;
-      audioEngine.play(attackSound);
+      audioEngine.play(attackSound, 1.5);
     }
 
     if (this.isAttacking) {
@@ -127,5 +127,14 @@ export class BlackCat implements GameObject {
       const attackY = this.y - 24;
       this.context.drawImage(this.attackAnimation.currentFrameImage, attackX, attackY);
     }
+  }
+
+  public getAttackCooldownProgress(): number {
+    // Returns a value between 0 and 1, where 1 means ready to attack
+    return Math.min(this.attackTimer / this.attackCooldown, 1);
+  }
+
+  public isAttackReady(): boolean {
+    return this.attackTimer >= this.attackCooldown;
   }
 }
