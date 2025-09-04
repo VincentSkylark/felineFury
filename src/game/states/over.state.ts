@@ -8,11 +8,16 @@ import { finalMusic } from '../sounds';
 
 class OverState implements State {
   private isVictory = false;
+  private enterTime = 0;
+  private readonly INPUT_DELAY = 2000;
 
   onEnter(isVictory?: boolean) {
     this.isVictory = isVictory || false;
+    this.enterTime = performance.now();
     audioEngine.stopAllLoops();
-    audioEngine.play(finalMusic, 1.2);
+    if (this.isVictory) {
+      audioEngine.play(finalMusic, 1.2);
+    }
   }
 
   onUpdate() {
@@ -38,7 +43,14 @@ class OverState implements State {
   }
 
   updateControls() {
-    if (controls.isConfirm && !controls.previousState.isConfirm) {
+    // Check if enough time has passed since entering this state
+    const currentTime = performance.now();
+    if (currentTime - this.enterTime < this.INPUT_DELAY) {
+      return; // Ignore input during delay period
+    }
+
+    if ((controls.isConfirm && !controls.previousState.isConfirm) ||
+      (controls.isAttacking && !controls.previousState.isAttacking)) {
       gameStateMachine.setState(gameState);
     }
   }

@@ -38,6 +38,7 @@ export class EnemyGenerationFactory {
     public clear() {
         this.enemies = [];
         this.enemyScoreMap.clear();
+        this.enemyTypes = []; // Also clear registered enemy types
     }
 
     public setScoreCallback(callback: (score: number) => void) {

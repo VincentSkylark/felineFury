@@ -11,6 +11,8 @@ import { audioEngine } from '@/core/audio-engine';
 import { backgroundMusic, bossBattleMusic, } from '../sounds';
 import { gameStateMachine } from '@/game-state-machine';
 import { overState } from './over.state';
+import { controls } from '@/core/controls';
+import { pauseState } from './pause.state';
 
 export interface GameConfig {
   music: boolean;
@@ -47,9 +49,9 @@ class GameState implements State {
     this.score = 0;
     this.enemyFactory.registerEnemyType(() => {
       const initialX = Math.random() * drawEngine.canvasWidth;
-      const verticalSpeed = 0.05 + Math.random() * 0.05;
-      const zigzagAmplitude = 30 + Math.random() * 40; // Horizontal zigzag distance
-      const zigzagFrequency = 0.001 + Math.random() * 0.001; // Zigzag speed
+      const verticalSpeed = 0.08 + Math.random() * 0.04;
+      const zigzagAmplitude = 40 + Math.random() * 30; // 40–70 px
+      const zigzagFrequency = 0.0015 + Math.random() * 0.0005; // 0.0015–0.002
       const path = (time: number) => ({
         x: initialX + Math.sin(time * zigzagFrequency) * zigzagAmplitude,
         y: time * verticalSpeed,
@@ -106,24 +108,18 @@ class GameState implements State {
         x: x,
         y: time * speed,
       });
-      return new Robot(drawEngine.context, path, this.character);
-    }, 800, 750); // Faster spawn rate, higher score
-
-    // Add more boss fight specific enemies here
-    this.enemyFactory.registerEnemyType(() => {
-      const initialX = Math.random() * drawEngine.canvasWidth;
-      const verticalSpeed = 0.06 + Math.random() * 0.08;
-      const zigzagAmplitude = 40 + Math.random() * 60; // Larger zigzag
-      const zigzagFrequency = 0.002 + Math.random() * 0.002;
-      const path = (time: number) => ({
-        x: initialX + Math.sin(time * zigzagFrequency) * zigzagAmplitude,
-        y: time * verticalSpeed,
-      });
       return new Cucumber(drawEngine.context, path, this.character);
-    }, 600, 100); // More frequent, higher value
+    }, 800, 750);
+
   }
 
   onUpdate(timeElapsed: number) {
+    // Handle pause toggle
+    if (controls.isEscape && !controls.previousState.isEscape) {
+      gameStateMachine.setState(pauseState, this);
+      return;
+    }
+
     if (!this.bossFightStarted && this.gameTime > 10000) {
       this.bossFightStarted = true;
       this.startBossFight();
@@ -151,6 +147,17 @@ class GameState implements State {
   }
 
   onDraw() {
+    this.background.draw();
+    this.character.draw();
+    this.enemyFactory.draw();
+    if (this.boss) {
+      this.boss.draw();
+    }
+    this.drawUI();
+  }
+
+  drawBackground() {
+    // Draw the current game state without updating - for pause overlay
     this.background.draw();
     this.character.draw();
     this.enemyFactory.draw();
@@ -233,6 +240,10 @@ class GameState implements State {
 
     // Check if boss is defeated and has moved off screen
     if (this.boss.isDefeated() && this.boss.y > drawEngine.context.canvas.height) {
+      // Stop and clear enemy factory
+      this.enemyFactory.stop();
+      this.enemyFactory.clear();
+
       // Award victory bonus points
       this.addScore(10000);
 

@@ -23,19 +23,7 @@ async function main() {
   document.body.addEventListener('keydown', initAudio);
   document.body.addEventListener('touchstart', initAudio);
 
-  await assetLoader.loadImages([
-    '/cat-12-24.png',
-    '/attack-16.png',
-    '/robot-16.png',
-    '/flippers-16.png',
-    '/cucumber-16.png',
-    '/cabinet-16.png',
-    '/bookshelf-16.png',
-    '/boss-base.png',
-    '/boss-anger.png',
-    '/boss-hurt.png',
-    '/boss-defeat.png',
-  ]);
+  await assetLoader.loadSpritesheet('/spritesheet.png');
 
   createGameStateMachine(menuState);
 

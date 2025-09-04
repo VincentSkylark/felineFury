@@ -1,14 +1,14 @@
 # Feline Fury
 
-A top-down shooter game featuring a black cat for the js13k 2025 competition.
+A top-down dodging game where a black cat uses a short-range melee (Z, long cooldown) and bounces cucumbers back at enemies — for js13k 2025.
 
 ## Story
 
-You are a black cat, and you are mad. You have to shoot everything that moves.
+Embark on a black cat's adventure through the house, battling pesky cucumbers, a relentless robot vacuum, and slippery flippers — all in pursuit of his favorite snack: cookie.
 
 ## Gameplay
 
-Use the arrow keys to move and the space bar to shoot.
+Use the arrow keys to move and press Z to attack. If you hit a cucumber, it will bounce back and can strike enemies.
 
 ## Build and Run
 
@@ -27,12 +27,12 @@ npm run serve
 
 ## Technologies Used
 
-*   Vite
-*   TypeScript
-*   Roadroller
-*   Google Closure Compiler
-*   ECT (Efficient Compression Tool)
+* Vite
+* TypeScript
+* Roadroller
+* Google Closure Compiler
+* ECT (Efficient Compression Tool)
 
 ## Special Thanks
 
-*   Rob Louie for his TypeScript js13k template.
+* Rob Louie for his TypeScript js13k template.

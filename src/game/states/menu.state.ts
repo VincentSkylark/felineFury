@@ -39,7 +39,8 @@ class MenuState implements State {
       this.selectedOption = (this.selectedOption + 1) % 3;
     }
 
-    if (controls.isConfirm && !controls.previousState.isConfirm) {
+    if ((controls.isConfirm && !controls.previousState.isConfirm) ||
+      (controls.isAttacking && !controls.previousState.isAttacking)) {
       switch (this.selectedOption) {
         case 0: // Start Game
           gameState.onEnter({ music: this.musicEnabled });

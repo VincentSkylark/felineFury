@@ -16,7 +16,7 @@ export class BlackCat implements GameObject {
   public width = CHARACTER_WIDTH;
   public height = CHARACTER_HEIGHT;
   public isAttacking = false;
-  private attackCooldown = 2000; // ms
+  private attackCooldown = 1000; // ms
   private attackTimer = this.attackCooldown;
   private isLoaded = false;
 
@@ -92,18 +92,9 @@ export class BlackCat implements GameObject {
   }
 
   private handleMovement() {
-    if (controls.isLeft) {
-      this.x -= CHARACTER_SPEED;
-    }
-    if (controls.isRight) {
-      this.x += CHARACTER_SPEED;
-    }
-    if (controls.isUp) {
-      this.y -= CHARACTER_SPEED;
-    }
-    if (controls.isDown) {
-      this.y += CHARACTER_SPEED;
-    }
+    // Use analog input for smoother movement
+    this.x += controls.inputDirection.x * CHARACTER_SPEED;
+    this.y += controls.inputDirection.y * CHARACTER_SPEED;
 
     // Collision detection
     if (this.x < 0) {

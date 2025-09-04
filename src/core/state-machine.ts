@@ -14,6 +14,12 @@ export class StateMachine {
     this.currentState.onEnter?.(...enterArgs);
   }
 
+  resumeState(newState: State) {
+    // Resume a state without calling onEnter - used for pause/resume
+    this.currentState.onLeave?.();
+    this.currentState = newState;
+  }
+
   update(timeElapsed: number) {
     this.currentState.onUpdate(timeElapsed);
   }
