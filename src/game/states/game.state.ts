@@ -15,7 +15,7 @@ import { controls } from '@/core/controls';
 import { pauseState } from './pause.state';
 
 export interface GameConfig {
-  music: boolean;
+  // Reserved for future game configuration options
 }
 
 class GameState implements State {
@@ -28,17 +28,10 @@ class GameState implements State {
   private bossFightPending = false;
   private bossDefeated = false;
   private score = 0;
-  private config: GameConfig = { music: true };
 
-  onEnter(config?: GameConfig) {
-    if (config) {
-      this.config = config;
-    }
-
+  onEnter() {
     audioEngine.stopAllLoops();
-    if (this.config.music) {
-      audioEngine.playLoop(backgroundMusic, [1, 0.3, 0.6, 0.1]);
-    }
+    audioEngine.playLoop(backgroundMusic, [1, 0.3, 0.6, 0.1]);
     this.character = new BlackCat(drawEngine.context, 120, 300);
     this.background = new Background(drawEngine);
     this.enemyFactory = new EnemyGenerationFactory();

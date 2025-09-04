@@ -19,6 +19,7 @@ type CompiledTrack = CompiledNote[];
 class AudioEngine {
   private audioCtx: AudioContext | null = null;
   private isEnabled = false;
+  private musicEnabled = true; // Global music setting
   private activeLoops: Map<SimplifiedTune, number> = new Map();
   private activeOscillators: OscillatorNode[] = [];
 
@@ -129,7 +130,7 @@ class AudioEngine {
 
   // Custom volumes: [sine, square, sawtooth, triangle]
   public playLoop(tune: SimplifiedTune, volumes?: number[]) {
-    if (!this.isEnabled || !this.audioCtx) {
+    if (!this.isEnabled || !this.audioCtx || !this.musicEnabled) {
       return;
     }
 
@@ -254,6 +255,18 @@ class AudioEngine {
       }
     });
     this.activeOscillators.length = 0; // Clear the array
+  }
+
+  public setMusicEnabled(enabled: boolean): void {
+    this.musicEnabled = enabled;
+    if (!enabled) {
+      // If music is disabled, stop all currently playing loops
+      this.stopAllLoops();
+    }
+  }
+
+  public isMusicEnabled(): boolean {
+    return this.musicEnabled;
   }
 }
 

@@ -15,7 +15,7 @@ class OverState implements State {
     this.isVictory = isVictory || false;
     this.enterTime = performance.now();
     audioEngine.stopAllLoops();
-    if (this.isVictory) {
+    if (this.isVictory && audioEngine.isMusicEnabled()) {
       audioEngine.play(finalMusic, 1.2);
     }
   }
