@@ -72,19 +72,10 @@ class SpritesheetLoader {
     }
 
     public getSpriteAsImage(spriteName: string): HTMLImageElement {
-        // Check if we already have the image cached
-        if (this.imageCache.has(spriteName)) {
-            return this.imageCache.get(spriteName)!;
-        }
-
+        // For compatibility, return the canvas as an HTMLImageElement
+        // since Canvas can be used as an image source in drawImage()
         const canvas = this.getSprite(spriteName);
-        const img = new Image();
-        img.src = canvas.toDataURL();
-
-        // Cache the image for future use
-        this.imageCache.set(spriteName, img);
-
-        return img;
+        return canvas as any as HTMLImageElement;
     }
 
     public isLoaded(): boolean {

@@ -9,7 +9,7 @@ import { finalMusic } from '../sounds';
 class OverState implements State {
   private isVictory = false;
   private enterTime = 0;
-  private readonly INPUT_DELAY = 2000;
+  private readonly INPUT_DELAY = 500;
 
   onEnter(isVictory?: boolean) {
     this.isVictory = isVictory || false;

@@ -24,12 +24,16 @@ class AssetLoader {
 
       // Convert URL path to sprite name (remove leading slash and use as sprite name)
       const spriteName = url.startsWith('/') ? url.substring(1) : url;
-      const spriteImage = this.getSpriteAsImage(spriteName);
+      const spriteCanvas = this.getSprite(spriteName);
+
+      // Canvas can be used as HTMLImageElement in drawImage calls
+      // Cast it to HTMLImageElement for type compatibility
+      const spriteAsImage = spriteCanvas as any as HTMLImageElement;
 
       // Cache it in our images map for faster future access
-      this.images.set(url, spriteImage);
+      this.images.set(url, spriteAsImage);
 
-      return spriteImage;
+      return spriteAsImage;
     }
 
     const image = this.images.get(url);

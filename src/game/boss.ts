@@ -1,4 +1,4 @@
-import { GameAnimation, Frame } from './animation';
+import { GameAnimation } from './animation';
 import { assetLoader } from '../core/asset-loader';
 import { BlackCat } from './cat';
 import { Enemy } from './enemy';
@@ -55,13 +55,15 @@ export class Boss extends Enemy {
         const hurtImage = assetLoader.getImage('/boss-hurt.png');
         const defeatImage = assetLoader.getImage('/boss-defeat.png');
 
-        const createStateCanvas = (overlay: HTMLImageElement) => {
+        const createStateCanvas = (overlay: HTMLImageElement | HTMLCanvasElement) => {
             const canvas = document.createElement('canvas');
             canvas.width = BOSS_WIDTH;
             canvas.height = BOSS_HEIGHT;
             const ctx = canvas.getContext('2d');
             if (ctx) {
+                // Draw the base image first
                 ctx.drawImage(baseImage, 0, 0, BOSS_WIDTH, BOSS_HEIGHT);
+                // Then draw the state overlay on top
                 ctx.drawImage(overlay, 0, 0, BOSS_WIDTH, BOSS_HEIGHT);
             }
             return canvas;
@@ -80,11 +82,11 @@ export class Boss extends Enemy {
         // Stage 1
         const circlePath: PathFunction = (time: number) => {
             const centerX = drawEngine.canvasWidth / 2 - this.width / 2;
-            const centerY = 120;
-            const radius = 60;
+            const centerY = 100;
+            const radius = 70;
             return {
-                x: centerX + Math.cos(time / 500) * radius,
-                y: centerY + Math.sin(time / 500) * radius,
+                x: centerX + Math.cos(time / 500 - 1.57) * radius,
+                y: centerY + Math.sin(time / 500 - 1.57) * radius,
             };
         };
         this.paths.set('stage1_anger', circlePath);
@@ -102,7 +104,7 @@ export class Boss extends Enemy {
         this.paths.set('stage2_anger', zigzagPath);
 
         // Stage 3
-        const defeatPath: PathFunction = (time: number) => ({
+        const defeatPath: PathFunction = (_time: number) => ({
             x: this.x,
             y: this.y < drawEngine.canvasHeight ? this.y + 1 : this.y,
         });
@@ -265,5 +267,16 @@ export class Boss extends Enemy {
 
     public isDefeated(): boolean {
         return this.health <= 0;
+    }
+
+    public draw(): void {
+        // Add some debugging to ensure the boss is being drawn
+        if (this.currentAnimation && this.currentAnimation.currentFrameImage) {
+            this.context.drawImage(this.currentAnimation.currentFrameImage, this.x, this.y, this.width, this.height);
+        } else {
+            // Fallback: draw a red rectangle if animation is missing
+            this.context.fillStyle = '#FF0000';
+            this.context.fillRect(this.x, this.y, this.width, this.height);
+        }
     }
 }

@@ -26,6 +26,7 @@ class GameState implements State {
   private gameTime = 0;
   private bossFightStarted = false;
   private bossFightPending = false;
+  private bossDefeated = false;
   private score = 0;
   private config: GameConfig = { music: true };
 
@@ -46,6 +47,7 @@ class GameState implements State {
     this.boss = null;
     this.bossFightStarted = false;
     this.bossFightPending = false;
+    this.bossDefeated = false;
     this.score = 0;
     this.enemyFactory.registerEnemyType(() => {
       const initialX = Math.random() * drawEngine.canvasWidth;
@@ -132,7 +134,11 @@ class GameState implements State {
 
     this.background.update(timeElapsed);
     this.character.update(timeElapsed);
-    this.enemyFactory.update(timeElapsed);
+
+    // Only update enemy factory if boss is not defeated
+    if (!this.bossDefeated) {
+      this.enemyFactory.update(timeElapsed);
+    }
 
     if (this.bossFightPending && this.enemyFactory.enemies.length === 0) {
       this.boss = new Boss(drawEngine.context, this.character, () => this.triggerGameOver());
@@ -142,6 +148,15 @@ class GameState implements State {
     if (this.boss) {
       this.boss.update(timeElapsed);
       this.checkReflectedCucumberBossCollision();
+
+      // Check if boss just got defeated (health reached 0)
+      if (!this.bossDefeated && this.boss.isDefeated()) {
+        this.bossDefeated = true;
+        // Stop enemy spawning immediately when boss is defeated
+        this.enemyFactory.stop();
+        this.enemyFactory.clear();
+      }
+
       this.checkBossVictory();
     }
   }
@@ -198,7 +213,7 @@ class GameState implements State {
     drawEngine.drawText('Attack', 12, progressBarX, progressBarY - 5, 'white', 'left');
   }
 
-  onExit() {
+  onExit(): void {
     audioEngine.stopAllLoops();
   }
 
@@ -239,11 +254,7 @@ class GameState implements State {
     if (!this.boss) return;
 
     // Check if boss is defeated and has moved off screen
-    if (this.boss.isDefeated() && this.boss.y > drawEngine.context.canvas.height) {
-      // Stop and clear enemy factory
-      this.enemyFactory.stop();
-      this.enemyFactory.clear();
-
+    if (this.bossDefeated && this.boss.y > drawEngine.context.canvas.height) {
       // Award victory bonus points
       this.addScore(10000);
 
