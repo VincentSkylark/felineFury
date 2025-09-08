@@ -8,7 +8,7 @@ Embark on a black cat's adventure through the house, battling pesky cucumbers, a
 
 ## Gameplay
 
-Use the arrow keys to move and press Z to attack. If you hit a cucumber, it will bounce back and can strike enemies.
+Use the arrow keys to move and press Z to attack. If you hit a cucumber, it will bounce back and strike enemies.
 
 ## Build and Run
 

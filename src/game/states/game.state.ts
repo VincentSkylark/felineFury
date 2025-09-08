@@ -63,6 +63,7 @@ class GameState implements State {
       });
       return new Cucumber(drawEngine.context, path, this.character);
     }, 1000, 100);
+
     this.enemyFactory.registerEnemyType(() => {
       const initialX = Math.random() * drawEngine.canvasWidth;
       const vx = (Math.random() - 0.5) * 0.05; // horizontal velocity
@@ -95,16 +96,15 @@ class GameState implements State {
   }
 
   private registerBossFightEnemies() {
-    // Example: Add faster, more aggressive enemies during boss fight
     this.enemyFactory.registerEnemyType(() => {
       const x = Math.random() * drawEngine.canvasWidth;
-      const speed = 0.08 + Math.random() * 0.12; // Faster than normal
+      const speed = 0.08 + Math.random() * 0.12;
       const path = (time: number) => ({
         x: x,
         y: time * speed,
       });
       return new Cucumber(drawEngine.context, path, this.character);
-    }, 800, 750);
+    }, 800, 100);
 
   }
 
@@ -115,7 +115,7 @@ class GameState implements State {
       return;
     }
 
-    if (!this.bossFightStarted && this.gameTime > 10000) {
+    if (!this.bossFightStarted && this.gameTime > 60000) {
       this.bossFightStarted = true;
       this.startBossFight();
     }

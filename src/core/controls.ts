@@ -32,7 +32,9 @@ class Controls {
 
   // Mobile touch controls
   isMobile = false;
+  shouldShowMobileControls = false;
   mobileSpeedMultiplier = 0.7; // Reduce mobile movement speed by 30%
+  mobileWidthThreshold = 912;
   touchControls = {
     joystick: null as HTMLElement | null,
     joystickKnob: null as HTMLElement | null,
@@ -56,9 +58,11 @@ class Controls {
       ('ontouchstart' in window) ||
       (navigator.maxTouchPoints > 0);
 
-    if (this.isMobile) {
-      this.setupMobileControls();
-    }
+    // Check if mobile controls should be shown
+    this.checkMobileControlsVisibility();
+
+    // Add window resize listener
+    window.addEventListener('resize', () => this.handleResize());
   }
 
   queryController() {
@@ -76,11 +80,11 @@ class Controls {
     const downVal = (this.keyMap.get('KeyS') || this.keyMap.get('ArrowDown') || isButtonPressed(XboxControllerButton.DpadDown)) ? 1 : 0;
 
     // Combine keyboard, gamepad, and touch inputs
-    let inputX = (leftVal + rightVal) || gamepad?.axes[0] || (this.isMobile ? this.touchControls.touchDirection.x : 0);
-    let inputY = (upVal + downVal) || gamepad?.axes[1] || (this.isMobile ? this.touchControls.touchDirection.y : 0);
+    let inputX = (leftVal + rightVal) || gamepad?.axes[0] || (this.shouldShowMobileControls ? this.touchControls.touchDirection.x : 0);
+    let inputY = (upVal + downVal) || gamepad?.axes[1] || (this.shouldShowMobileControls ? this.touchControls.touchDirection.y : 0);
 
     // Apply mobile speed multiplier for touch controls
-    if (this.isMobile && (this.touchControls.touchDirection.x !== 0 || this.touchControls.touchDirection.y !== 0)) {
+    if (this.shouldShowMobileControls && (this.touchControls.touchDirection.x !== 0 || this.touchControls.touchDirection.y !== 0)) {
       inputX *= this.mobileSpeedMultiplier;
       inputY *= this.mobileSpeedMultiplier;
     }
@@ -102,7 +106,7 @@ class Controls {
     this.isEscape = Boolean(this.keyMap.get('Escape') || isButtonPressed(XboxControllerButton.Select));
 
     const isKeyboardAttackPressed = Boolean(this.keyMap.get('KeyZ'));
-    const isTouchAttackPressed = this.isMobile && this.touchControls.isAttackPressed;
+    const isTouchAttackPressed = this.shouldShowMobileControls && this.touchControls.isAttackPressed;
 
     // Apply throttling only to touch attacks
     let canTouchAttack = true;
@@ -123,6 +127,11 @@ class Controls {
   }
 
   setupMobileControls() {
+    // Don't create controls if they already exist
+    if (this.touchControls.joystick || this.touchControls.attackButton) {
+      return;
+    }
+
     // Create joystick container - larger and better positioned
     const joystick = document.createElement('div');
     joystick.className = 'mobile-joystick';
@@ -277,6 +286,40 @@ class Controls {
       this.handleJoystickEnd(e);
       this.handleAttackEnd(e);
     }
+  }
+
+  checkMobileControlsVisibility() {
+    const shouldShow = this.isMobile || window.innerWidth < this.mobileWidthThreshold;
+
+    if (shouldShow && !this.shouldShowMobileControls) {
+      this.shouldShowMobileControls = true;
+      this.setupMobileControls();
+    } else if (!shouldShow && this.shouldShowMobileControls) {
+      this.shouldShowMobileControls = false;
+      this.hideMobileControls();
+    }
+  }
+
+  handleResize() {
+    this.checkMobileControlsVisibility();
+  }
+
+  hideMobileControls() {
+    if (this.touchControls.joystick) {
+      this.touchControls.joystick.remove();
+      this.touchControls.joystick = null;
+    }
+    if (this.touchControls.attackButton) {
+      this.touchControls.attackButton.remove();
+      this.touchControls.attackButton = null;
+    }
+    this.touchControls.joystickKnob = null;
+
+    // Reset touch state
+    this.touchControls.isDragging = false;
+    this.touchControls.touchDirection.x = 0;
+    this.touchControls.touchDirection.y = 0;
+    this.touchControls.isAttackPressed = false;
   }
 }
 
