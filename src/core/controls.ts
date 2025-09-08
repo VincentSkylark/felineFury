@@ -38,10 +38,12 @@ class Controls {
     joystickKnob: null as HTMLElement | null,
     attackButton: null as HTMLElement | null,
     joystickCenter: { x: 0, y: 0 },
-    joystickRadius: 60,
+    joystickRadius: 75,
     isDragging: false,
     touchDirection: { x: 0, y: 0 },
-    isAttackPressed: false
+    isAttackPressed: false,
+    lastAttackTime: 0,
+    attackThrottleMs: 200 // 200ms throttle between attacks
   };
 
   constructor() {
@@ -99,7 +101,20 @@ class Controls {
     this.isConfirm = Boolean(this.keyMap.get('Enter') || isButtonPressed(XboxControllerButton.A) || isButtonPressed(XboxControllerButton.Start));
     this.isEscape = Boolean(this.keyMap.get('Escape') || isButtonPressed(XboxControllerButton.Select));
 
-    const isPrimaryAttackPressed = Boolean(this.keyMap.get('KeyZ')) || (this.isMobile && this.touchControls.isAttackPressed);
+    const isKeyboardAttackPressed = Boolean(this.keyMap.get('KeyZ'));
+    const isTouchAttackPressed = this.isMobile && this.touchControls.isAttackPressed;
+
+    // Apply throttling only to touch attacks
+    let canTouchAttack = true;
+    if (isTouchAttackPressed) {
+      const currentTime = Date.now();
+      canTouchAttack = (currentTime - this.touchControls.lastAttackTime) >= this.touchControls.attackThrottleMs;
+      if (canTouchAttack) {
+        this.touchControls.lastAttackTime = currentTime;
+      }
+    }
+
+    const isPrimaryAttackPressed = isKeyboardAttackPressed || (isTouchAttackPressed && canTouchAttack);
     this.isAttacking = isPrimaryAttackPressed && !this.previousState.isAttacking;
   }
 
@@ -113,10 +128,10 @@ class Controls {
     joystick.className = 'mobile-joystick';
     joystick.style.cssText = `
       position: fixed;
-      bottom: 60px;
-      left: 60px;
-      width: 120px;
-      height: 120px;
+      bottom: 120px;
+      left: 120px;
+      width: 150px;
+      height: 150px;
       background: rgba(255, 255, 255, 0.2);
       border: 3px solid rgba(255, 255, 255, 0.4);
       border-radius: 50%;
@@ -130,8 +145,8 @@ class Controls {
     joystickKnob.className = 'mobile-joystick-knob';
     joystickKnob.style.cssText = `
       position: absolute;
-      width: 45px;
-      height: 45px;
+      width: 60px;
+      height: 60px;
       background: rgba(255, 255, 255, 0.9);
       border: 2px solid rgba(200, 200, 200, 0.8);
       border-radius: 50%;
@@ -147,10 +162,10 @@ class Controls {
     attackButton.className = 'mobile-attack-button';
     attackButton.style.cssText = `
       position: fixed;
-      bottom: 60px;
-      right: 60px;
-      width: 90px;
-      height: 90px;
+      bottom: 120px;
+      right: 120px;
+      width: 110px;
+      height: 110px;
       background: rgba(255, 80, 80, 0.8);
       border: 3px solid rgba(255, 255, 255, 0.6);
       border-radius: 50%;
@@ -160,7 +175,7 @@ class Controls {
       justify-content: center;
       color: white;
       font-weight: bold;
-      font-size: 24px;
+      font-size: 28px;
       touch-action: none;
       user-select: none;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -222,14 +237,14 @@ class Controls {
     if (distance <= maxDistance) {
       this.touchControls.touchDirection.x = deltaX / maxDistance;
       this.touchControls.touchDirection.y = deltaY / maxDistance;
-      this.touchControls.joystickKnob!.style.transform = `translate(${deltaX - 22.5}px, ${deltaY - 22.5}px)`;
+      this.touchControls.joystickKnob!.style.transform = `translate(${deltaX - 30}px, ${deltaY - 30}px)`;
     } else {
       const angle = Math.atan2(deltaY, deltaX);
       const limitedX = Math.cos(angle) * maxDistance;
       const limitedY = Math.sin(angle) * maxDistance;
       this.touchControls.touchDirection.x = limitedX / maxDistance;
       this.touchControls.touchDirection.y = limitedY / maxDistance;
-      this.touchControls.joystickKnob!.style.transform = `translate(${limitedX - 22.5}px, ${limitedY - 22.5}px)`;
+      this.touchControls.joystickKnob!.style.transform = `translate(${limitedX - 30}px, ${limitedY - 30}px)`;
     }
   }
 
