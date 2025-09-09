@@ -5,6 +5,7 @@ import { gameStateMachine } from '@/game-state-machine';
 import { gameState } from './game.state';
 import { audioEngine } from '@/core/audio-engine';
 import { finalMusic } from '../sounds';
+import { assetLoader } from '@/core/asset-loader';
 
 class OverState implements State {
   private isVictory = false;
@@ -39,7 +40,15 @@ class OverState implements State {
 
     drawEngine.drawText(title, 30, xCenter, 80);
     drawEngine.drawText(`Final Score: ${scoreText}`, 18, xCenter, 140, 'white');
-    drawEngine.drawText('Start Over', 18, xCenter, 200, 'white');
+    if (this.isVictory) {
+      const endingImage = assetLoader.getImage('ending-32.png');
+      if (endingImage) {
+        drawEngine.context.drawImage(endingImage, xCenter - 32, 160, 64, 64);
+      }
+      drawEngine.drawText('Start Over', 18, xCenter, 240, 'white');
+    } else {
+      drawEngine.drawText('Start Over', 18, xCenter, 200, 'white');
+    }
   }
 
   updateControls() {

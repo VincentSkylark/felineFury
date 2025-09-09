@@ -26,6 +26,6 @@ export const bossBattleMusic: SimplifiedTune = {
 };
 
 export const finalMusic: SimplifiedTune = {
-    triangle: ['A1', '-1', 'A1', 'A4', 'F4', 'G4', 'A4', 'G1', 'A3'],
+    triangle: ['C1', 'E1', 'G1', 'A4', 'F4', 'G4', 'A4', 'G1', 'A3'],
     sine: ['-8', 'C4', 'D4', 'E4', 'D1', 'E3']
 };
