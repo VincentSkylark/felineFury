@@ -23,7 +23,7 @@ async function main() {
   document.body.addEventListener('keydown', initAudio);
   document.body.addEventListener('touchstart', initAudio);
 
-  assetLoader.loadImages(['ending-32.png']);
+  await assetLoader.loadImages(['/ending-32.png']);
   await assetLoader.loadSpritesheet('/spritesheet.png');
 
   createGameStateMachine(menuState);

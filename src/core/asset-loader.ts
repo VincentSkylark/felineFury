@@ -16,31 +16,32 @@ class AssetLoader {
   }
 
   public getImage(url: string): HTMLImageElement {
+    // First, always check if we have this image directly loaded
+    if (this.images.has(url)) {
+      return this.images.get(url)!;
+    }
+
+    // If we have a spritesheet loaded, try to get it from there
     if (this.usesSpritesheet) {
-      // Check if we already have this cached in our images map
-      if (this.images.has(url)) {
-        return this.images.get(url)!;
+      try {
+        // Convert URL path to sprite name (remove leading slash and use as sprite name)
+        const spriteName = url.startsWith('/') ? url.substring(1) : url;
+        const spriteCanvas = this.getSprite(spriteName);
+
+        // Canvas can be used as HTMLImageElement in drawImage calls
+        // Cast it to HTMLImageElement for type compatibility
+        const spriteAsImage = spriteCanvas as any as HTMLImageElement;
+
+        // Cache it in our images map for faster future access
+        this.images.set(url, spriteAsImage);
+
+        return spriteAsImage;
+      } catch (error) {
+        // If sprite not found in spritesheet, fall through to error below
       }
-
-      // Convert URL path to sprite name (remove leading slash and use as sprite name)
-      const spriteName = url.startsWith('/') ? url.substring(1) : url;
-      const spriteCanvas = this.getSprite(spriteName);
-
-      // Canvas can be used as HTMLImageElement in drawImage calls
-      // Cast it to HTMLImageElement for type compatibility
-      const spriteAsImage = spriteCanvas as any as HTMLImageElement;
-
-      // Cache it in our images map for faster future access
-      this.images.set(url, spriteAsImage);
-
-      return spriteAsImage;
     }
 
-    const image = this.images.get(url);
-    if (!image) {
-      throw new Error(`Image not found: ${url}. Make sure to preload it.`);
-    }
-    return image;
+    throw new Error(`Image not found: ${url}. Make sure to preload it.`);
   }
 
   public getSprite(spriteName: string): HTMLCanvasElement {

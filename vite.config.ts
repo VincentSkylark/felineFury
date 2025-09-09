@@ -53,7 +53,7 @@ export default defineConfig(({ command, mode }) => {
           },
         }
       },
-      plugins: [typescriptPlugin(), closurePlugin(), roadrollerPlugin(), ectPlugin()],
+      plugins: [typescriptPlugin(), roadrollerPlugin(), ectPlugin()],
     };
   }
 

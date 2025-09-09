@@ -7,6 +7,8 @@ import { audioEngine } from '@/core/audio-engine';
 
 class MenuState implements State {
   private selectedOption = 0; // 0: Start Game, 1: Music, 2: Fullscreen
+  private lastToggleTime = 0;
+  private readonly TOGGLE_THROTTLE_MS = 300;
 
   onUpdate(_timeElapsed: number) {
     this.updateControls();
@@ -41,12 +43,17 @@ class MenuState implements State {
 
     if ((controls.isConfirm && !controls.previousState.isConfirm) ||
       (controls.isAttacking && !controls.previousState.isAttacking)) {
+      const currentTime = performance.now();
+      
       switch (this.selectedOption) {
         case 0: // Start Game
           gameStateMachine.setState(gameState);
           break;
         case 1: // Music Toggle
-          audioEngine.setMusicEnabled(!audioEngine.isMusicEnabled());
+          if (currentTime - this.lastToggleTime > this.TOGGLE_THROTTLE_MS) {
+            audioEngine.setMusicEnabled(!audioEngine.isMusicEnabled());
+            this.lastToggleTime = currentTime;
+          }
           break;
         case 2: // Fullscreen
           this.toggleFullscreen();
