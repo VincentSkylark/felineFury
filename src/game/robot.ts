@@ -27,7 +27,7 @@ export class Robot extends Enemy {
     }
 
     private load() {
-        const originalImage = assetLoader.getImage('/robot-16.png');
+        const originalImage = assetLoader.getImage('robot-16.png');
 
         const flippedCanvas = document.createElement('canvas');
         flippedCanvas.width = ROBOT_SPRITE_WIDTH;

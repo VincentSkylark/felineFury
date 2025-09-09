@@ -24,7 +24,7 @@ class AssetLoader {
     // If we have a spritesheet loaded, try to get it from there
     if (this.usesSpritesheet) {
       try {
-        // Convert URL path to sprite name (remove leading slash and use as sprite name)
+        // For spritesheet sprites, always use the filename without leading slash
         const spriteName = url.startsWith('/') ? url.substring(1) : url;
         const spriteCanvas = this.getSprite(spriteName);
 

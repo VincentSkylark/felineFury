@@ -27,7 +27,7 @@ export class Flippers extends Enemy {
     }
 
     private load() {
-        const originalImage = assetLoader.getImage('/flippers-16.png');
+        const originalImage = assetLoader.getImage('flippers-16.png');
 
         const flippedCanvas = document.createElement('canvas');
         flippedCanvas.width = FLIPPERS_SPRITE_WIDTH;

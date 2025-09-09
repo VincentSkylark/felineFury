@@ -29,7 +29,7 @@ export class BlackCat implements GameObject {
   }
 
   private load() {
-    const originalImage = assetLoader.getImage('/cat-12-24.png');
+    const originalImage = assetLoader.getImage('cat-12-24.png');
 
     const flippedCanvas = document.createElement('canvas');
     flippedCanvas.width = CHARACTER_WIDTH;
@@ -50,7 +50,7 @@ export class BlackCat implements GameObject {
     this.animations.set('normal', normalAnimation);
     this.currentAnimation = normalAnimation;
 
-    const attackImage = assetLoader.getImage('/attack-16.png');
+    const attackImage = assetLoader.getImage('attack-16.png');
 
     const flippedAttackCanvas = document.createElement('canvas');
     flippedAttackCanvas.width = 16;

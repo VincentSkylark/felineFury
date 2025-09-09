@@ -50,10 +50,10 @@ export class Boss extends Enemy {
     }
 
     private load() {
-        const baseImage = assetLoader.getImage('/boss-base.png');
-        const angerImage = assetLoader.getImage('/boss-anger.png');
-        const hurtImage = assetLoader.getImage('/boss-hurt.png');
-        const defeatImage = assetLoader.getImage('/boss-defeat.png');
+        const baseImage = assetLoader.getImage('boss-base.png');
+        const angerImage = assetLoader.getImage('boss-anger.png');
+        const hurtImage = assetLoader.getImage('boss-hurt.png');
+        const defeatImage = assetLoader.getImage('boss-defeat.png');
 
         const createStateCanvas = (overlay: HTMLImageElement | HTMLCanvasElement) => {
             const canvas = document.createElement('canvas');

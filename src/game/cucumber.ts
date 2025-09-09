@@ -30,7 +30,7 @@ export class Cucumber extends Enemy {
     }
 
     private load() {
-        const originalImage = assetLoader.getImage('/cucumber-16.png');
+        const originalImage = assetLoader.getImage('cucumber-16.png');
 
         const frames: Frame[] = [
             [originalImage, 100],

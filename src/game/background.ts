@@ -10,8 +10,8 @@ export class Background {
   private bookshelfImage: HTMLImageElement;
 
   constructor(private drawEngine: DrawEngine) {
-    this.cabinetImage = assetLoader.getImage('/cabinet-16.png');
-    this.bookshelfImage = assetLoader.getImage('/bookshelf-16.png');
+    this.cabinetImage = assetLoader.getImage('cabinet-16.png');
+    this.bookshelfImage = assetLoader.getImage('bookshelf-16.png');
     this.createPattern();
   }
 
